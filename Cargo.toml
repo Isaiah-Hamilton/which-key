@@ -1,0 +1,6 @@
+[package]
+name = "which-key"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
