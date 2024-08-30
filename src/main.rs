@@ -1,3 +1,10 @@
+mod cli;
+
+use cli::Args;
+use clap::Parser;
+use comfy_table::Table;
+use comfy_table::presets::UTF8_FULL;
+
 use std::fs::File;
 use dirs::config_dir;
 use serde::Deserialize;
@@ -34,38 +41,29 @@ fn read_config() -> Result<HashMap<String, Config>, Box<dyn std::error::Error>> 
 }
 
 fn main() {
+    let args = Args::parse();
+    let mut rows: Vec<Vec<String>> = Vec::new();
+
     match read_config() {
         Ok(config) => {
-            for (name, data) in config {
-                println!("name: {}", name)
+            for (name, config) in config {
+                if name == args.name {
+                    for (keymap_name, keymap ) in config.keymaps {
+                        rows.push(vec![keymap_name, keymap.action.unwrap()])
+                    }
+                }
             }
         },
         Err(e) => eprintln!("Error reading config: {}", e),
     }
+
+    let mut table = Table::new();
+
+    table
+        .load_preset(UTF8_FULL)
+        .set_header(vec!["keymap", "action"])
+        .add_rows(rows);
+
+    println!("{table}");
 }
 
-// mod cli;
-//
-// use cli::Args;
-// use clap::Parser;
-// use comfy_table::Table;
-// use comfy_table::presets::UTF8_FULL;
-//
-// fn main() {
-//     let args = Args::parse();
-//     let mut table = Table::new();
-//     table
-//         .load_preset(UTF8_FULL)
-//         .set_header(vec!["keymap", "action"])
-//         .add_row(vec![
-//             "cmd-space",
-//             "opens raycast",
-//         ])
-//         .add_row(vec![
-//             "cmd-q",
-//             "quits fouced app",
-//         ]);
-//
-//     println!("{}:", args.name);
-//     println!("{table}");
-// }
