@@ -26,9 +26,7 @@ fn read_config() -> Result<HashMap<String, Config>, Box<dyn std::error::Error>> 
     let config_path = if cfg!(target_os = "macos") {
         Some(dirs::home_dir().unwrap().join(".config/which-key/config.yaml"))
     } else {
-        let mut path = config_dir().unwrap();
-        path.push("which-key/config.yaml");
-        Some(path)
+        Some(config_dir().unwrap().join("which-key/config.yaml"))
     };
 
     if let Some(config_path) = config_path {
