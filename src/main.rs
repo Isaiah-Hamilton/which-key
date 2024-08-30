@@ -49,7 +49,19 @@ fn main() {
             for (name, config) in config {
                 if name == args.name {
                     for (keymap_name, keymap ) in config.keymaps {
-                        rows.push(vec![keymap_name, keymap.action.unwrap()])
+                        rows.push(vec![keymap_name, keymap.action.unwrap()]);
+
+                        if let Some(sub_keymaps) = keymap.keymaps {
+                            let mut row_keymaps = String::new();
+                            let mut row_actions = String::new();
+
+                            for (sub_keymap_name, sub_keymap) in sub_keymaps {
+                                row_keymaps.push_str(&format!(" └─ {}\n", sub_keymap_name));
+                                row_actions.push_str(&format!("{}\n", sub_keymap.action.unwrap()));
+                            }
+
+                            rows.push(vec![row_keymaps, row_actions]);
+                        }
                     }
                 }
             }
