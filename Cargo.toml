@@ -1,6 +1,12 @@
 [package]
 name = "which-key"
 version = "0.1.0"
+authors = ["Isaiah Hamilton <isaiah7hamilton@gmail.com>"]
+repository = "https://github.com/isaiah-hamilton/which-key"
+keywords = ["cross-platform", "cli", "keymaps"]
+description = "which key helps you remember your keymaps without leaving the terminal."
+license = "MIT"
+readme = "README.md"
 edition = "2021"
 
 [dependencies]
