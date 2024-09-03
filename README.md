@@ -1,9 +1,10 @@
 <div align="center">
   <h1>Which Key</h1>
 
-  <p>helps you remember your keymaps without leaving the terminal. Inspired by [which-key.nvim](https://github.com/folke/which-key.nvim)</p>
+  helps you remember your keymaps without leaving the terminal. Inspired by [which-key.nvim](https://github.com/folke/which-key.nvim)
 
-  [<img src="https://img.shields.io/github/v/release/isaiah-hamilton/which-key" alt="github version">](https://github.com/Isaiah-Hamilton/which-key/releases)
+  [<img src="https://img.shields.io/crates/v/which-key" alt="github version">](https://crates.io/crates/which-key)
+  [<img src="https://img.shields.io/crates/size/which-key" alt="github version">](https://crates.io/crates/which-key)
 </div>
 
 ## Installation
