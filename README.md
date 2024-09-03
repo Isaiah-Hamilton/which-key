@@ -32,3 +32,22 @@ cargo install --path . --locked
 # Option 3 - Install using cargo with the repo as the source
 cargo install --git https://github.com/ClementTsang/bottom --locked
 ```
+
+## Contributors
+
+Thanks to all contributors:
+
+[<img src="https://contributors.deno.dev/isaiah-hamilton/which-key" alt="contributors">](https://github.com/isaiah-hamilton/which-key/graphs/contributors)
+
+## Thanks
+
+- This project is inspired by [which-key.nvim](https://github.com/folke/which-key.nvim).
+
+- This tool wouldn't be possible without these amazing libraries:
+  - [clap](https://github.com/clap-rs/clap)
+  - [comfy-table](https://github.com/Nukesor/comfy-table)
+  - [dirs](https://github.com/dirs-dev/dirs-rs)
+  - [serde](https://github.com/serde-rs/serde)
+  - [serde_yml](https://github.com/sebastienrousseau/serde_yml)
+
+- And of course, another round of thanks to all the contributors and package maintainers!
