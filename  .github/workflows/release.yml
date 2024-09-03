@@ -1,0 +1,106 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Triggers the workflow on version tags like v1.0.0
+
+jobs:
+  release:
+    name: Release and Publish
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install dependencies
+        run: cargo fetch
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Package
+        run: |
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            zip which-key-${{ github.ref_name }}-${{ matrix.os }}.zip target/release/which-key.exe
+          else
+            tar -czvf which-key-${{ github.ref_name }}-${{ matrix.os }}.tar.gz -C target/release which-key
+          fi
+        shell: bash
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: |
+            which-key-${{ github.ref_name }}-${{ matrix.os }}.tar.gz
+            which-key-${{ github.ref_name }}-${{ matrix.os }}.zip
+          asset_name: which-key-${{ github.ref_name }}-${{ matrix.os }}
+          asset_content_type: application/gzip
+
+  update-version:
+    name: Update Cargo.toml Version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Update version
+        run: |
+          version=${{ github.ref_name#v }}
+          sed -i.bak "s/^version = .*/version = \"$version\"/" Cargo.toml
+
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add Cargo.toml
+          git commit -m "Bump version to ${{ github.ref_name }}"
+
+      - name: Push changes
+        run: git push origin HEAD
+
+  publish:
+    name: Publish to crates.io
+    needs: update-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Publish to crates.io
+        run: cargo publish --token ${{ secrets.CARGO_TOKEN }}
