@@ -8,6 +8,10 @@ description = "which key helps you remember your keymaps without leaving the ter
 license = "MIT"
 readme = "README.md"
 edition = "2021"
+exclude = [
+  ".github/",
+  ".gitignore"
+]
 
 [dependencies]
 clap = { version = "4.5.16", features = ["derive"] }
